@@ -51,4 +51,8 @@ app.service("brandService",function($http){
 
 
 
+
+    this.updateStatus = function(ids,status){
+        return $http.get('../brand/updateStatus.do?ids='+ids+"&status="+status);
+    }
 });

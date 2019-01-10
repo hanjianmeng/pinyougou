@@ -2,6 +2,9 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.item.ItemCatDao;
 import cn.itcast.core.pojo.good.Brand;
+import cn.itcast.core.pojo.entity.PageResult;
+import cn.itcast.core.pojo.good.Goods;
+import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.pojo.item.ItemCatQuery;
 import cn.itcast.core.util.Constants;
@@ -12,6 +15,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -127,5 +132,20 @@ public class ItemCatServiceImpl implements ItemCatService {
         String s1 = String.valueOf(chars[1]);
         return s + s1;
 
+    }
+
+    @Override
+    public PageResult findPage(ItemCat itemCat, Integer page, Integer rows) {
+        PageHelper.startPage(page, rows);
+        Page<ItemCat> itemCatList = (Page<ItemCat>)catDao.selectByExample(null);
+        return new PageResult(itemCatList.getTotal(), itemCatList.getResult());
+    }
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        ItemCat itemCat = new ItemCat();
+        itemCat.setId(id);
+        itemCat.setAuditStatus(status);
+        catDao.updateByPrimaryKeySelective(itemCat);
     }
 }

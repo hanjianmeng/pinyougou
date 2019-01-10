@@ -93,7 +93,15 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public List<Map> selectOptionList() {
-        return brandDao.selectOptionList();
+        return null;
+    }
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        Brand brand = new Brand();
+        brand.setId(id);
+        brand.setAuditStatus(status);
+        brandDao.updateByPrimaryKeySelective(brand);
     }
 
     /**

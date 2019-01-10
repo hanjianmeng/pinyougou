@@ -56,7 +56,7 @@ public class SpecificationServiceImpl implements SpecificationService {
     @Override
     public void add(SpecEntity specEntity) {
         //设置规格对象的状态
-        specEntity.getSpecification().setStatus("0");
+        //specEntity.getSpecification().setStatus("0");
         //1. 添加规格对象
         specDao.insertSelective(specEntity.getSpecification());
 
@@ -128,7 +128,8 @@ public class SpecificationServiceImpl implements SpecificationService {
 
     @Override
     public List<Map> selectOptionList() {
-        return specDao.selectOptionList();
+      //  return specDao.selectOptionList();
+        return null;
     }
 
 
@@ -190,5 +191,15 @@ public class SpecificationServiceImpl implements SpecificationService {
 
     }
 
+
+
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        Specification specification = new Specification();
+        specification.setId(id);
+        specification.setAuditStatus(status);
+        specDao.updateByPrimaryKeySelective(specification);
+    }
 
 }

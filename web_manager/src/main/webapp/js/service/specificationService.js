@@ -53,4 +53,9 @@ app.service('specificationService',function($http){
 
 
 
+
+    this.updateStatus = function(ids,status){
+        return $http.get('../specification/updateStatus.do?ids='+ids+"&status="+status);
+    }
+
 });

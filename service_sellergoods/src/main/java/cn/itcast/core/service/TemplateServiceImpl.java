@@ -79,7 +79,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void add(TypeTemplate template) {
-        template.setStatus("0");
+        //template.setStatus("0");
         templateDao.insertSelective(template);
     }
 
@@ -197,4 +197,12 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
 
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        TypeTemplate typeTemplate = new TypeTemplate();
+        typeTemplate.setId(id);
+        typeTemplate.setAuditStatus(status);
+        templateDao.updateByPrimaryKeySelective(typeTemplate);
+    }
 }

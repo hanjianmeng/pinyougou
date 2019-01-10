@@ -24,4 +24,6 @@ public interface TemplateService {
     public List<Map> findBySpecList(Long id);
 
     void uploadExcel(String fileName) throws Exception;
+
+    public void updateStatus(Long id, String status);
 }
