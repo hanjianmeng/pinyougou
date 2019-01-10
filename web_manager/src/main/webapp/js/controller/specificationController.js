@@ -64,8 +64,18 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
 			}		
 		);				
 	}
-	
-	$scope.searchEntity={};//定义搜索对象 
+
+
+    //导入为excel表
+    $scope.uploadExcel=function(){
+        specificationService.uploadExcel().success(
+            function(response){
+                alert(response.message);
+            }
+        );
+    }
+
+    $scope.searchEntity={};//定义搜索对象
 	
 	//搜索
 	$scope.search=function(page,rows){			

@@ -40,6 +40,7 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
+										<button type="button" class="btn btn-default" title="导入Excel表" data-toggle="modal" data-target="#addModal" ng-click=""><i class="fa fa-file-o"></i> 导入Excel表</button>
                                         <button type="button" class="btn btn-default" title="新建" ng-click="entity={specificationOptionList:[]}" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
                                         <button type="button" class="btn btn-default" title="删除" ng-click="dele()" ><i class="fa fa-trash-o"></i> 删除</button>
                                         
@@ -143,7 +144,40 @@
 		</div>
 	  </div>
 	</div>
-</div>    
+</div>
+
+
+  <!-- 编辑excel窗口 -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" >
+		  <div class="modal-content">
+			  <div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				  <h3 id="addModalLabel">文件上传 </h3>
+			  </div>
+			  <div class="modal-body">
+				  <table class="table table-bordered table-striped"  width="800px">
+					  <tr>
+						  请导入Excel
+
+					  </tr>
+					  <tr>
+
+						  <input class="btn btn-default"type="file" name="file"><br>
+						  <input class="btn btn-default" type="button" ng-click="uploadExcel()" value="上传Excel">
+					  </tr>
+				  </table>
+			  </div>
+			  <div class="modal-footer">
+				  <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="">确定</button>
+				  <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+			  </div>
+		  </div>
+	  </div>
+  </div>
+  <!--excel结束-->
+
+
 
 </body>
 

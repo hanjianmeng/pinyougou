@@ -7,7 +7,12 @@ import cn.itcast.core.service.TemplateService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * 模板管理
@@ -68,5 +73,32 @@ public class TemplateController {
             e.printStackTrace();
             return new Result(false, "删除失败!");
         }
+    }
+
+    @RequestMapping("/uploadExcel")
+    public Result uploadExcel(@RequestParam MultipartFile file, HttpServletRequest request){
+
+        String filePath = file.getOriginalFilename();
+        //获取文件路径
+        String savePath = request.getSession().getServletContext().getRealPath(filePath);
+        if(!file.isEmpty()) {
+
+            //新建文件
+            File targetFile = new File(savePath);
+
+            if (!targetFile.exists()) {
+                targetFile.mkdirs();
+            }
+
+            try {
+                file.transferTo(targetFile);
+                templateService.uploadExcel(savePath);
+                return new Result(true, "导入成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Result(false, "导入失败");
+            }
+        }
+        return null;
     }
 }

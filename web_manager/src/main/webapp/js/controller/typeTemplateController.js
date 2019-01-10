@@ -36,8 +36,17 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 			}
 		);				
 	}
-	
-	//保存 
+
+    //导入为excel表
+    $scope.uploadExcel=function(){
+        typeTemplateService.uploadExcel().success(
+            function(response){
+                alert(response.message);
+            }
+        );
+    }
+
+    //保存
 	$scope.save=function(){				
 		var serviceObject;//服务层对象  				
 		if($scope.entity.id!=null){//如果有ID
