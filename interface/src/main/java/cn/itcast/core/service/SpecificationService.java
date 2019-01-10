@@ -20,4 +20,6 @@ public interface SpecificationService {
     public void delete(Long[] ids);
 
     public List<Map> selectOptionList();
+
+    public void updateStatus(Long id, String status);
 }
