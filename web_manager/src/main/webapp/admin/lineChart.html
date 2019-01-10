@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>销售折线图</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- 引入angular的js -->
+    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    <!-- 引入分页相关的JS和CSS -->
+    <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+    <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+
+    <script type="text/javascript" src="../js/base_pagination.js"></script>
+    <script type="text/javascript" src="../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../js/service/orderService.js"></script>
+    <script type="text/javascript" src="../js/controller/orderManagerController.js"></script>
+    <!-- 引入 echarts.js -->
+    <script src="../plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 1000px;height:500px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var now= new Date();
+
+    var year=now.getFullYear();
+
+    var month=now.getMonth();
+
+    var date=now.getDate();
+
+    //写入相应id
+
+    var time = year+"年"+(month+1)+"月"+date+"日";
+
+    // 指定图表的配置项和数据
+    option = {
+        title: {
+            text: '销售折线图'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data:['总金额']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : [time,time,time,time,time,time,time]
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'总金额',
+                type:'line',
+                stack: '总量',
+                areaStyle: {},
+                data:[220, 182, 191, 234, 290, 330, 310]
+            },
+            // {
+            //     name:'视频广告',
+            //     type:'line',
+            //     stack: '总量',
+            //     areaStyle: {},
+            //     data:[150, 232, 201, 154, 190, 330, 410]
+            // },
+            // {
+            //     name:'直接访问',
+            //     type:'line',
+            //     stack: '总量',
+            //     areaStyle: {normal: {}},
+            //     data:[320, 332, 301, 334, 390, 330, 320]
+            // },
+            // {
+            //     name:'搜索引擎',
+            //     type:'line',
+            //     stack: '总量',
+            //     label: {
+            //         normal: {
+            //             show: true,
+            //             position: 'top'
+            //         }
+            //     },
+            //     areaStyle: {normal: {}},
+            //     data:[820, 932, 901, 934, 1290, 1330, 1320]
+            // }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+</body>
+</html>
