@@ -50,9 +50,17 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}		
 		);				
 	}
-	
-	 
-	//批量删除 
+
+    //导入为excel表
+    $scope.uploadExcel=function(){
+        itemCatService.uploadExcel().success(
+            function(response){
+                alert(response.message);
+            }
+        );
+    }
+
+    //批量删除
 	$scope.dele=function(){			
 		//获取选中的复选框			
 		itemCatService.dele( $scope.selectIds ).success(

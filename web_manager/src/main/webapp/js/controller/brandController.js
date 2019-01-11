@@ -19,8 +19,17 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			$scope.list = response.rows;
 		});
 	}
-	
-	// 保存品牌的方法:
+
+	//导入Excel
+    $scope.uploadExcel=function(){
+        brandService.uploadExcel().success(
+            function(response){
+                alert(response.message);
+            }
+        );
+    }
+
+    // 保存品牌的方法:
 	$scope.save = function(){
 		// 区分是保存还是修改
 		var object;

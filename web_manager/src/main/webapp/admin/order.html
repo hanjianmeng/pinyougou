@@ -24,7 +24,11 @@
     <script type="text/javascript" src="../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../js/service/orderService.js"></script>
     <script type="text/javascript" src="../js/controller/orderManagerController.js"></script>
-
+    <script type="text/javascript">
+        function createExcel() {
+            window.location.href="/orderManager/createExcel.do";
+        }
+    </script>
 </head>
 
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="orderManagerController">
@@ -42,7 +46,7 @@
                 <div class="btn-group">
                     <!--<button type="button" class="btn btn-default" title="新建" ng-click="entity={specificationOptionList:[]}" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>-->
                     <!--<button type="button" class="btn btn-default" title="删除" ng-click="dele()" ><i class="fa fa-trash-o"></i> 删除</button>-->
-
+                    <button class="btn btn-default" onclick="createExcel()">导出为Excel</button>
                     <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                 </div>
             </div>

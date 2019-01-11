@@ -10,9 +10,53 @@
 
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-seckillOrder.css" />
+
+	<!-- 引入angular的js -->
+	<script src="plugins/angularjs/angular.min.js"></script>
+
+
+	<script type="text/javascript">
+
+        var app=angular.module('pinyougou',['pinyougou']);
+        app.controller('orderPayController',function ($scope,$http) {
+
+            $scope.findCartList=function(){
+                $http.get('../orderPay/findCartList.do').success(
+                    function (reponse) {
+                        $scope.cartList=reponse;
+                    }
+                );
+            }
+
+
+            $scope.fk=function () {
+               var cropd= document.getElementById("crop");
+                if (cropd.getAttribute(disabled)!=true){
+
+                    window.location.href="http://localhost:8080/pay.html";
+                }
+                else {
+
+				}
+            }
+
+
+            setTimeout(function(){
+               document.getElementById("crop").setAttribute("disabled", true);
+               alert("支付时间超时,请重新下订单");
+            },10000);
+
+
+
+
+        })
+
+
+	</script>
+
 </head>
 
-<body>
+<body  class="hold-transition skin-red sidebar-mini"  ng-app="pinyougou" ng-controller="orderPayController" ng-init="findCartList()">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -23,12 +67,12 @@
 				<div class="shortcut">
 					<ul class="fl">
 						<li class="f-item">品优购欢迎您！</li>
-						<li class="f-item">请<a href="login.html" target="_blank">登录</a>　<span><a href="register.html" target="_blank">免费注册</a></span></li>
+						<li class="f-item">请<a href="login.html"  target="_blank">登录</a>　<span><a href="register.html" target="_blank">免费注册</a></span></li>
 					</ul>
 					<ul class="fr">
 						<li class="f-item">我的订单</li>
 						<li class="f-item space"></li>
-						<li class="f-item"><a href="home.html" target="_blank">我的品优购</a></li>
+						<li class="f-item"><a href="home.html"  target="_blank">我的品优购</a></li>
 						<li class="f-item space"></li>
 						<li class="f-item">品优购会员</li>
 						<li class="f-item space"></li>
@@ -202,49 +246,53 @@ $(function(){
                             </table>
                         </div>
 
-                        <div class="order-detail">
-                            <div class="orders">
-                                <div class="choose-order">
-                                    <label data-toggle="checkbox" class="checkbox-pretty checked">
-                                        <input type="checkbox" checked="checked"><span>全选</span>
-                                    </label>
-                                    <a href="" class="sui-btn btn-info btn-bordered hepay-btn">合并付款</a>
-                                    <div class="sui-pagination pagination-large top-pages">
-                                        <ul>
-                                            <li class="prev disabled"><a href="#">上一页</a></li>
+						<div class="order-detail">
+							<div class="orders">
+								<div class="choose-order">
+									<label data-toggle="checkbox" class="checkbox-pretty checked">
+										<input type="checkbox" checked="checked"><span>全选</span>
+									</label>
+									<a href="" class="sui-btn btn-info btn-bordered hepay-btn">合并付款</a>
+									<div class="sui-pagination pagination-large top-pages">
+										<ul>
+											<li class="prev disabled"><a href="#">上一页</a></li>
 
-                                            <li class="next"><a href="#">下一页</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+											<li class="next"><a href="#">下一页</a></li>
+										</ul>
+									</div>
+								</div>
 
-                                <div class="choose-title">
-                                    <label data-toggle="checkbox" class="checkbox-pretty ">
-                                           <input type="checkbox" checked="checked"><span>2017-02-11 11:59　订单编号：7867473872181848  店铺：哇哈哈 <a>和我联系</a></span>
-                                     </label>
-                                    <a class="sui-btn btn-info share-btn">分享</a>
-                                </div>
-                                <table class="sui-table table-bordered order-datatable">
+								<div class="choose-title">
+									<label data-toggle="checkbox" class="checkbox-pretty ">
+										<input type="checkbox" checked="checked"><span>2017-02-11 11:59　订单编号：7867473872181848  店铺：哇哈哈 <a>和我联系</a></span>
+									</label>
+									<a class="sui-btn btn-info share-btn">分享</a>
+								</div>
 
-                                    <tbody>
-                                        <tr>
+
+
+                                <table class="sui-table table-bordered order-datatable"   ng-repeat="cart in cartList" >
+
+                                    <tbody >
+
+                                        <tr ng-repeat="order in cart.orderItemList">
                                             <td width="35%">
-                                                <div class="typographic"><img src="img/goods.png" />
-                                                    <a href="#" class="block-text">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒 送泡瓶面膜刷喷瓶 新款</a>
-                                                    <span class="guige">规格：温泉喷雾150ml</span>
+                                                <div class="typographic"><img src="{{order.picPath}}" />
+                                                    <a href="#" class="block-text">{{order.title}}</a>
+                                                    <!--<span class="guige">规格：{{}}</span>-->
                                                 </div>
                                             </td>
                                             <td width="5%" class="center">
                                                 <ul class="unstyled">
                                                     <li class="o-price">¥599.00</li>
-                                                    <li>¥299.00</li>
+                                                    <li>{{order.price}}.00</li>
                                                 </ul>
                                             </td>
-                                            <td width="5%" class="center">1</td>
+                                            <td width="5%" class="center">{{order.num}}</td>
                                             <td width="8%" class="center"></td>
                                             <td width="10%" class="center">
                                                 <ul class="unstyled">
-                                                    <li>¥299.00</li>
+                                                    <li>{{order.price}}.00</li>
                                                     <li>（含运费：￥0.00）</li>
                                                 </ul>
                                             </td>
@@ -253,23 +301,35 @@ $(function(){
                                                     <li>等待买家付款</li>
                                                     <li><a href="orderDetail.html" class="btn">订单详情 </a></li>
                                                 </ul>
+                                            </td>
+                                           <!---->
 
 
-                                            </td>
-                                            <td width="10%" class="center">
-                                                <ul class="unstyled">
-                                                    <li><a href="#" class="sui-btn btn-info">立即付款</a></li>
-                                                    <li><a href="#">取消订单</a></li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+											</td>
+											<td width="10%" class="center">
+												<ul class="unstyled">
+													<li><a  href="#" id="crop" class="sui-btn btn-info"  ng-click="fk()">立即付款</a></li>
+													<li><a href="#">取消订单</a></li>
+												</ul>
+											</td>
+										</tr>
+										</tr>
+									</tbody>
+								</table>
+
+								<div class="choose-title">
+
+									<a class="sui-btn btn-info share-btn">全部支付</a>
+								</div>
+
 
                             </div>
 
-                            <div class="choose-order">
+							<!--fenye-->
+							<tm-pagination conf="paginationConf"></tm-pagination>
+
+                           <!-- <div class="choose-order">
                                 <label data-toggle="checkbox" class="checkbox-pretty checked">
                                         <input type="checkbox" checked="checked"><span>全选</span>
                                     </label>
@@ -288,7 +348,7 @@ $(function(){
                                             <input type="text" class="page-num"><button class="page-confirm" onclick="alert(1)">确定</button>
                                             页</span></div>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <div class="clearfix"></div>
                         </div>
@@ -380,11 +440,15 @@ $(function(){
                             </ul>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </div>
     <!-- 底部栏位 -->
+
+
     <!--页面底部-->
 <div class="clearfix footer">
 	<div class="py-container">

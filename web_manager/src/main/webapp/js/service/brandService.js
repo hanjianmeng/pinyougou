@@ -32,6 +32,26 @@ app.service("brandService",function($http){
 		return $http.get("../brand/selectOptionList.do");
 	}
 
+    //导入Excel
+    this.uploadExcel = function() {
+        // 向后台传递数据:
+        var formData = new FormData();
+        // 向formData中添加数据:
+        var file = document.querySelector('input[type=file]').files[0];
+        formData.append('file', file);
+
+        return $http({
+            method: 'post',
+            url: '../brand/uploadExcel.do',
+            data: formData,
+            headers: {'Content-Type': undefined},// Content-Type : text/html  text/plain
+            transformRequest: angular.identity
+        });
+    }
+
+
+
+
     this.updateStatus = function(ids,status){
         return $http.get('../brand/updateStatus.do?ids='+ids+"&status="+status);
     }

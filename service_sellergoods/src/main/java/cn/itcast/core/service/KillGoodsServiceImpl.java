@@ -18,6 +18,7 @@ import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.pojo.item.ItemQuery;
 import cn.itcast.core.pojo.seckill.SeckillGoods;
 import cn.itcast.core.pojo.seller.Seller;
+import cn.itcast.core.util.IdWorker;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -82,6 +83,16 @@ public class KillGoodsServiceImpl implements KillGoodsService {
         seckillGoods.setId(id);
         seckillGoods.setStatus(status);
         seckillGoodsDao.updateByPrimaryKeySelective(seckillGoods);
+    }
+
+    @Override
+    public void add(SeckillGoods seckillGoods) {
+        seckillGoods.setStatus("0");
+        IdWorker idWorker = new IdWorker();
+        long id = idWorker.nextId();
+        seckillGoods.setGoodsId(id);
+
+        seckillGoodsDao.insertSelective(seckillGoods);
     }
 
 }

@@ -14,6 +14,12 @@ public interface ItemCatService {
 
     public List<ItemCat> findAll();
 
+    public void add(ItemCat itemCat);
+
+    public List<ItemCat> findItemCatList();
+
+    void uploadExcel(String fileName) throws Exception;
+
     public PageResult findPage(ItemCat itemCat, Integer page, Integer rows);
 
     public void updateStatus(Long id, String status);

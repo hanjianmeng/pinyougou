@@ -10,4 +10,6 @@ public interface KillGoodsService {
     public PageResult findPage(SeckillGoods seckillGoods, Integer page, Integer rows);
 
     public void updateStatus(Long id, String status);
+
+    public void add(SeckillGoods seckillGoods);
 }

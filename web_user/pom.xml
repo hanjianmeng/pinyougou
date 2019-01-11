@@ -31,6 +31,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>cn.itcast</groupId>
             <artifactId>interface</artifactId>
             <version>1.0-SNAPSHOT</version>

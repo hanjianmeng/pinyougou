@@ -21,5 +21,7 @@ public interface SpecificationService {
 
     public List<Map> selectOptionList();
 
+    void uploadExcel(String fileName) throws Exception;
+
     public void updateStatus(Long id, String status);
 }

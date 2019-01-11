@@ -1,9 +1,13 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.dao.user.UserDao;
+import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +20,14 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImp implements UserService {
+
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -89,6 +95,37 @@ public class UserServiceImp implements UserService {
         userDao.insertSelective(user);
     }
 
+    //查询所有
+    @Override
+    public List<User> findAll() {
+        List<User> userslist = userDao.selectByExample(null);
+        return userslist;
+    }
+
+    /**
+     * 完善用户信息
+     * @param user
+     */
+    @Override
+    public void updateUser(String username,User user) {
+        UserQuery query = new UserQuery();
+        UserQuery.Criteria criteria = query.createCriteria();
+        criteria.andUsernameEqualTo(username);
+
+        userDao.updateByExampleSelective(user,query);
+    }
+
+    /**
+     * 头像展示
+     * @param username
+     * @return
+     */
+    @Override
+    public User findImg(String username) {
+        User user = userDao.findAll(username);
+        return user;
+    }
+
     public static void main(String[] args) {
         StringBuffer sb = new StringBuffer();
         for (int i =1; i < 7; i++) {
@@ -98,4 +135,60 @@ public class UserServiceImp implements UserService {
 
         System.out.println("=====" + sb.toString());
     }
+
+    @Override
+    public PageResult findByPage(User user, Integer page, Integer rows) {
+        //利用分页助手实现分页, 第一个参数:当前页, 第二个参数: 每页展示数据条数
+        PageHelper.startPage(page, rows);
+
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+        if (user != null) {
+            if (user.getUsername() != null && !"".equals(user.getUsername())) {
+                criteria.andNameLike("%" + user.getUsername() + "%");
+            }
+        }
+        Page<User> userList =(Page<User>) userDao.selectByExample(userQuery);
+        return new PageResult(userList.getTotal(), userList.getResult());
+    }
+
+    //查询一个
+    @Override
+    public User findOne(Long id) {
+        return userDao.selectByPrimaryKey(id);
+    }
+
+    //修改冻结状态
+    @Override
+    public void update(Long id, String status) {
+        User user = new User();
+
+        user.setId(id);
+        user.setStatus(status);
+
+        userDao.updateByPrimaryKeySelective(user);
+
+    }
+
+
+    @Override
+    public PageResult search(User user, Integer page, Integer rows) {
+        //利用分页助手实现分页, 第一个参数:当前页, 第二个参数: 每页展示数据条数
+        PageHelper.startPage(page, rows);
+
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+        if (user != null) {
+            if (user.getUsername() != null && !"".equals(user.getUsername())) {
+                criteria.andNameLike("%" + user.getUsername() + "%");
+            }
+        }
+        Page<User> userList = (Page<User>) userDao.selectByExample(userQuery);
+        return new PageResult(userList.getTotal(), userList.getResult());
+    }
+
+
+
 }
+
+

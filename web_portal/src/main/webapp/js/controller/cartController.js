@@ -18,8 +18,8 @@ app.controller('cartController',function($scope,cartService){
 					$scope.findCartList();//刷新列表
 				}else{
 					alert(response.message);
-				}				
-			}		
+				}
+			}
 		);		
 	}
 	
