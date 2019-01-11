@@ -28,5 +28,29 @@ app.service('typeTemplateService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../typeTemplate/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}
+
+
+    //导入为excel表
+    this.uploadExcel = function(){
+        // 向后台传递数据:
+        var formData = new FormData();
+        // 向formData中添加数据:
+        var file =document.querySelector('input[type=file]').files[0];
+        formData.append('file',file);
+
+        return $http({
+            method:'post',
+            url:'../typeTemplate/uploadExcel.do',
+            data:formData,
+            headers:{'Content-Type':undefined} ,// Content-Type : text/html  text/plain
+            transformRequest: angular.identity
+        });
+    }
+
+
+
+    this.updateStatus = function(ids,status){
+        return $http.get('../typeTemplate/updateStatus.do?ids='+ids+"&status="+status);
+    }
 });
