@@ -1,6 +1,7 @@
 package cn.itcast.core.controller;
 
 import cn.itcast.core.pojo.item.ItemCat;
+import cn.itcast.core.service.ItemCatService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,7 @@ import java.util.List;
 public class ItemCatController {
 
     @Reference
-    //private IndexService indexService;
+    private ItemCatService itemCatService;
 
     /**
      * 查询商品分类信息
@@ -20,7 +21,6 @@ public class ItemCatController {
      */
     @RequestMapping("/findItemCatList")
     public List<ItemCat> findItemCatList() {
-        //return indexService.findItemCatList();
-        return null;
+        return itemCatService.findItemCatList();
     }
 }
