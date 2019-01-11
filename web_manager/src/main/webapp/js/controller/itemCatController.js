@@ -50,9 +50,17 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}		
 		);				
 	}
-	
-	 
-	//批量删除 
+
+    //导入为excel表
+    $scope.uploadExcel=function(){
+        itemCatService.uploadExcel().success(
+            function(response){
+                alert(response.message);
+            }
+        );
+    }
+
+    //批量删除
 	$scope.dele=function(){			
 		//获取选中的复选框			
 		itemCatService.dele( $scope.selectIds ).success(
@@ -76,7 +84,22 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}			
 		);
 	}
-	
+
+    // 显示状态
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
+
+    // 审核的方法:
+    $scope.updateStatus = function(status){
+        itemCatService.updateStatus($scope.selectIds,status).success(function(response){
+            if(response.success){
+                $scope.reloadList();//刷新列表
+                $scope.selectIds = [];
+            }else{
+                alert(response.message);
+            }
+        });
+    }
+
 	// 根据父ID查询分类
 	$scope.findByParentId =function(parentId){
 		itemCatService.findByParentId(parentId).success(function(response){
@@ -107,15 +130,5 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		
 		$scope.findByParentId(p_entity.id);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
+
 });	

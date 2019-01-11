@@ -3,6 +3,7 @@ package cn.itcast.core.service;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
 import cn.itcast.core.dao.template.TypeTemplateDao;
 import cn.itcast.core.pojo.entity.PageResult;
+import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
 import cn.itcast.core.pojo.template.TypeTemplate;
@@ -12,10 +13,20 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +79,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void add(TypeTemplate template) {
-        template.setStatus("0");
+        //template.setStatus("0");
         templateDao.insertSelective(template);
     }
 
@@ -120,5 +131,78 @@ public class TemplateServiceImpl implements TemplateService {
 
 
         return maps;
+    }
+
+    /**
+     * 上传Excel表数据读取到数据库
+     * @param fileName  excel路径
+     * @throws Exception
+     */
+    @Override
+    public void uploadExcel(String fileName) throws Exception {
+
+        //判断后缀名
+        InputStream is = new FileInputStream(new File(fileName));
+        Workbook hssfWorkbook = null;
+        if (fileName.endsWith("xlsx")){
+            hssfWorkbook = new XSSFWorkbook(is);//Excel 2007
+        }else if (fileName.endsWith("xls")){
+            hssfWorkbook = new HSSFWorkbook(is);//Excel 2003
+
+        }
+
+
+
+        TypeTemplate addType = null;
+        //建立集合存取品牌pojo
+        List<TypeTemplate> list = new ArrayList<TypeTemplate>();
+        // 循环工作表Sheet
+        for (int numSheet =0 ; numSheet <hssfWorkbook.getNumberOfSheets(); numSheet++) {
+
+            Sheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
+            if (hssfSheet == null) {
+                continue;
+            }
+            // 循环行Row
+            for (int rowNum = 1; rowNum <= hssfSheet.getLastRowNum(); rowNum++) {
+
+                Row hssfRow = hssfSheet.getRow(rowNum);
+                if (hssfRow != null) {
+                    addType = new TypeTemplate();
+
+
+                    Cell name = hssfRow.getCell(1);
+                    Cell specId = hssfRow.getCell(2);
+                    Cell brandId = hssfRow.getCell(3);
+                    Cell custom = hssfRow.getCell(4);
+
+
+
+                    //将数据放到pojo
+
+                    addType.setName(name.toString());
+                    addType.setSpecIds(specId.toString());
+                    addType.setBrandIds(brandId.toString());
+                    addType.setCustomAttributeItems(custom.toString());
+                    list.add(addType);
+                }
+            }
+        }
+        //数据存入数据库
+        for (TypeTemplate typeTemplate : list) {
+            templateDao.insertSelective(typeTemplate);
+        }
+
+
+    }
+
+
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        TypeTemplate typeTemplate = new TypeTemplate();
+        typeTemplate.setId(id);
+        typeTemplate.setAuditStatus(status);
+        templateDao.updateByPrimaryKeySelective(typeTemplate);
     }
 }

@@ -6,7 +6,6 @@ import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.util.Constants;
 import com.alibaba.dubbo.config.annotation.Service;
-import jdk.nashorn.internal.ir.LiteralNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
