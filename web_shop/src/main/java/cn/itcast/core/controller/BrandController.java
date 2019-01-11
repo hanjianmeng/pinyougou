@@ -30,7 +30,7 @@ public class BrandController {
     public Result save(@RequestBody Brand brand){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            brand.setSeller_id(userName);
+           // brand.setSeller_id(userName);
             brandService.add(brand);
             return new Result(true,"保存成功");
         }catch (Exception e){
