@@ -23,6 +23,16 @@ public class ItemCat implements Serializable {
      * 类型id
      */
     private Long typeId;
+    //状态
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     //添加下级分类的集合作为属性
     private List<ItemCat> itemCatList;

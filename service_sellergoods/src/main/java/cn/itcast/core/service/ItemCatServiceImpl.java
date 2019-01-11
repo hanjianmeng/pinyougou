@@ -1,6 +1,7 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.dao.item.ItemCatDao;
+import cn.itcast.core.pojo.entity.GoodsEntity;
 import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.good.Goods;
@@ -19,6 +20,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class ItemCatServiceImpl implements ItemCatService {
 
     @Autowired
@@ -61,6 +64,11 @@ public class ItemCatServiceImpl implements ItemCatService {
     @Override
     public List<ItemCat> findAll() {
         return catDao.selectByExample(null);
+    }
+
+    @Override
+    public void add(ItemCat itemCat) {
+        catDao.insertSelective(itemCat);
     }
 
     /**

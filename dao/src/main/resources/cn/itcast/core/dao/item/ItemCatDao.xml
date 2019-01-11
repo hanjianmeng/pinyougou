@@ -133,8 +133,8 @@
       <if test="typeId != null" >
         type_id,
       </if>
-      <if test="auditStatus != null" >
-        audit_status,
+      <if test="status != null" >
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -150,8 +150,8 @@
       <if test="typeId != null" >
         #{typeId,jdbcType=BIGINT},
       </if>
-      <if test="auditStatus != null" >
-        #{auditStatus,jdbcType=VARCHAR},
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

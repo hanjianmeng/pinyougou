@@ -14,6 +14,8 @@ public interface ItemCatService {
 
     public List<ItemCat> findAll();
 
+    public void add(ItemCat itemCat);
+
     public List<ItemCat> findItemCatList();
 
     void uploadExcel(String fileName) throws Exception;
