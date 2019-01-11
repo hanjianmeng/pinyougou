@@ -10,4 +10,8 @@ public interface UserService {
     public Boolean checkSmsCode(String phone, String smsCode);
 
     public void add(User user);
+
+    public void updateUser(String username,User user);
+
+    public User findImg(String username);
 }

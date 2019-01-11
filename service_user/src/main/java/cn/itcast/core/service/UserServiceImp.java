@@ -2,6 +2,7 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -89,6 +90,30 @@ public class UserServiceImp implements UserService {
         userDao.insertSelective(user);
     }
 
+    /**
+     * 完善用户信息
+     * @param user
+     */
+    @Override
+    public void updateUser(String username,User user) {
+        UserQuery query = new UserQuery();
+        UserQuery.Criteria criteria = query.createCriteria();
+        criteria.andUsernameEqualTo(username);
+
+        userDao.updateByExampleSelective(user,query);
+    }
+
+    /**
+     * 头像展示
+     * @param username
+     * @return
+     */
+    @Override
+    public User findImg(String username) {
+        User user = userDao.findAll(username);
+        return user;
+    }
+
     public static void main(String[] args) {
         StringBuffer sb = new StringBuffer();
         for (int i =1; i < 7; i++) {
@@ -98,4 +123,7 @@ public class UserServiceImp implements UserService {
 
         System.out.println("=====" + sb.toString());
     }
+
+
+
 }
