@@ -20,4 +20,14 @@ public class ContentController {
         List<Content> list = contentService.findByCategoryIdFromRedis(categoryId);
         return list;
     }
+    @RequestMapping("/findByCategoryId2")
+    public List<Content> findByCategoryId2(Long categoryId) {
+        List<Content> list = contentService.findByCategoryIdFromRedis(categoryId);
+        return list;
+    }
+    @RequestMapping("/findByCategoryId3")
+    public List<Content> findByCategoryId3(Long categoryId) {
+        List<Content> list = contentService.findByCategoryIdFromRedis(categoryId);
+        return list;
+    }
 }
