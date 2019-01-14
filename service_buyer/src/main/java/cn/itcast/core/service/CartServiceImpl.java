@@ -154,6 +154,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void setCartListToRedis(String userName, List<BuyerCart> cartList) {
         redisTemplate.boundHashOps(Constants.CART_LIST_REDIS).put(userName, cartList);
+        redisTemplate.boundHashOps("fukuang").put(userName, cartList);
 
     }
 
@@ -179,5 +180,14 @@ public class CartServiceImpl implements CartService {
             }
         }
         return redisCartList;
+    }
+
+    @Override
+    public List<BuyerCart> gCartListFromRedis(String userName) {
+        List<BuyerCart> cartList = (List<BuyerCart>)redisTemplate.boundHashOps("fukuang").get(userName);
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+        }
+        return cartList;
     }
 }

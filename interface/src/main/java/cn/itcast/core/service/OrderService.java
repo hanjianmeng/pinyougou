@@ -25,4 +25,8 @@ public interface OrderService {
 
     //销售折线图,统计某一天支付总金额
     public Map<String ,Object> findTotalMoney();
+     //计算支付超时
+    long toDate();
+
+    Map<String,String> timeAndOrderId();
 }

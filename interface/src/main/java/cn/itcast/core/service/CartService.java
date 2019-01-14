@@ -19,4 +19,6 @@ public interface CartService {
     public List<BuyerCart> getCartListFromRedis(String userName);
 
     public List<BuyerCart> mergeCookieCartListToRedisCartList(List<BuyerCart> cookieCartList, List<BuyerCart> redisCartList);
+
+    List<BuyerCart> gCartListFromRedis(String userName);
 }

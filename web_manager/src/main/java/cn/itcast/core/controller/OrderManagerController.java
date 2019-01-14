@@ -121,9 +121,10 @@ public class OrderManagerController {
 
         //获取order所有数据
         List<Order> orders = orderService.findAll();
-        if (orders!=null){
+        int i=2;
+        if (orders!=null&&orders.size()>0){
             //遍历数组
-            for (int i = 2; i < orders.size(); i++) {
+
                 for (Order order : orders) {
                     //改变支付金额,商家id,日期格式
                     String payMent = String.valueOf(order.getPayment());
@@ -139,8 +140,9 @@ public class OrderManagerController {
                     row.createCell(5).setCellValue(order.getReceiverMobile());
                     row.createCell(6).setCellValue(order.getReceiver());
                     row.createCell(7).setCellValue(orderId);
+                    i++;
                 }
-            }
+
 
         }
 
