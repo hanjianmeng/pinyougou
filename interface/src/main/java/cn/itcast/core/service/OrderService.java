@@ -6,6 +6,7 @@ import cn.itcast.core.pojo.order.Order;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
 
@@ -24,4 +25,8 @@ public interface OrderService {
 
     //销售折线图,统计某一天支付总金额
     public String findTotalMoney(Date time);
+     //计算支付超时
+    long toDate();
+
+    Map<String,String> timeAndOrderId();
 }

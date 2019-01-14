@@ -19,9 +19,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Transactional
@@ -42,21 +41,26 @@ public class OrderServiceImpl implements  OrderService {
     @Autowired
     private IdWorker idWorker;
 
+    private long aLong=0;
+
+    private Map<String,String> orderMap;
+
     @Override
     public void add(Order order) {
+        aLong=System.currentTimeMillis();
         //1. 从订单对象中获取当前登录用户用户名
         String userId = order.getUserId();
         //2. 根据用户名获取购物车集合
         List<BuyerCart> cartList = (List<BuyerCart>)redisTemplate.boundHashOps(Constants.CART_LIST_REDIS).get(userId);
         List<String> orderIdList=new ArrayList();//订单ID列表
         double total_money=0;//总金额 （元）
-
+         toDate();
         //3. 遍历购物车集合
         if (cartList != null) {
             for (BuyerCart cart : cartList) {
                 //TODO 4. 根据购物车对象保存订单数据
                 long orderId = idWorker.nextId();
-                System.out.println("sellerId:"+cart.getSellerId());
+               // System.out.println("sellerId:"+cart.getSellerId());
                 Order tborder=new Order();//新创建订单对象
                 tborder.setOrderId(orderId);//订单ID
                 tborder.setUserId(order.getUserId());//用户名
@@ -71,6 +75,14 @@ public class OrderServiceImpl implements  OrderService {
                 tborder.setSellerId(cart.getSellerId());//商家ID
                 //循环购物车明细
                 double money=0;
+                orderMap=new HashMap<>();
+                Date date = new Date();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String format = simpleDateFormat.format(date);
+
+                orderMap.put("orderId",String.valueOf(orderId));
+                orderMap.put("time",format);
+                orderMap.put("type",order.getPaymentType());
 
                 //5. 从购物车中获取购物项集合
                 List<OrderItem> orderItemList = cart.getOrderItemList();
@@ -113,6 +125,17 @@ public class OrderServiceImpl implements  OrderService {
         //TODO 10. 根据当前登录用户的用户名删除购物车
         redisTemplate.boundHashOps(Constants.CART_LIST_REDIS).delete(order.getUserId());
 
+    }
+    //计算支付超时
+    public long toDate(){
+         //计算超时时间
+        return aLong;
+
+    }
+
+    //获取订单编号,下订单时间
+    public Map<String,String> timeAndOrderId(){
+        return orderMap;
     }
 
     @Override

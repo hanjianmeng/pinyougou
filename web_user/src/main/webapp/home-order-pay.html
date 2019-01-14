@@ -30,21 +30,29 @@
 
 
             $scope.fk=function () {
-               var cropd= document.getElementById("crop");
-                if (cropd.getAttribute(disabled)!=true){
-
-                    window.location.href="http://localhost:8080/pay.html";
-                }
-                else {
-
-				}
+                $http.get('../orderPay/time.do').success(
+                    function (reponse) {
+                      if (reponse>1*60*1000){
+                            document.getElementById("crop").setAttribute("disabled", true);
+                            alert("支付时间超时,请重新下订单");
+                        }
+					  else {
+                            window.location.href="http://localhost:8080/pay.html";
+                        }
+                    }
+                );
             }
 
 
-            setTimeout(function(){
-               document.getElementById("crop").setAttribute("disabled", true);
-               alert("支付时间超时,请重新下订单");
-            },10000);
+            $scope.timeAndOrderId=function () {
+				$http.get('../orderPay/timeAndOrderId.do').success(
+				    function (reponse) {
+						$scope.orderId=reponse.orderId;
+						$scope.time=reponse.time;
+						$scope.type=reponse.type;
+                    }
+				)
+            }
 
 
 
@@ -56,7 +64,7 @@
 
 </head>
 
-<body  class="hold-transition skin-red sidebar-mini"  ng-app="pinyougou" ng-controller="orderPayController" ng-init="findCartList()">
+<body  class="hold-transition skin-red sidebar-mini"  ng-app="pinyougou" ng-controller="orderPayController" ng-init="findCartList();timeAndOrderId()">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -263,8 +271,8 @@ $(function(){
 								</div>
 
 								<div class="choose-title">
-									<label data-toggle="checkbox" class="checkbox-pretty ">
-										<input type="checkbox" checked="checked"><span>2017-02-11 11:59　订单编号：7867473872181848  店铺：哇哈哈 <a>和我联系</a></span>
+									<label data-toggle="checkbox" class="checkbox-pretty " >
+										<input type="checkbox" checked="checked"><span>{{time}}　订单编号：{{orderId}} <a>和我联系</a></span>
 									</label>
 									<a class="sui-btn btn-info share-btn">分享</a>
 								</div>
@@ -288,8 +296,8 @@ $(function(){
                                                     <li>{{order.price}}.00</li>
                                                 </ul>
                                             </td>
-                                            <td width="5%" class="center">{{order.num}}</td>
-                                            <td width="8%" class="center"></td>
+                                            <td width="5%" class="center">数量:{{order.num}}</td>
+                                            <td width="8%" class="center">店铺:{{cart.sellerName}}</td>
                                             <td width="10%" class="center">
                                                 <ul class="unstyled">
                                                     <li>{{order.price}}.00</li>
