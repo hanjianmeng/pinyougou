@@ -25,9 +25,6 @@ public class GoodsController {
     @Reference
     private GoodsService goodsService;
 
-
-
-
     @RequestMapping("/search")
     public PageResult search(@RequestBody Goods goods, Integer page , Integer rows) {
         //获取当前登录用户的用户名
