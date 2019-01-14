@@ -12,6 +12,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orderManager")
@@ -75,13 +77,14 @@ public class OrderManagerController {
 
     /**
      * 查询某一天的销售总金额
-     * @param time
+     * @param
      * @return
      */
     @RequestMapping("/findTotalMoney")
-    public String findTotalMoney(Date time){
-        String totalMoney = orderService.findTotalMoney(time);
-        return totalMoney;
+    @ResponseBody
+    public Map<String ,Object> findTotalMoney(){
+        Map<String, Object> map = orderService.findTotalMoney();
+        return map;
     }
 
     /**
@@ -118,9 +121,10 @@ public class OrderManagerController {
 
         //获取order所有数据
         List<Order> orders = orderService.findAll();
-        if (orders!=null){
+        int i=2;
+        if (orders!=null&&orders.size()>0){
             //遍历数组
-            for (int i = 2; i < orders.size(); i++) {
+
                 for (Order order : orders) {
                     //改变支付金额,商家id,日期格式
                     String payMent = String.valueOf(order.getPayment());
@@ -136,8 +140,9 @@ public class OrderManagerController {
                     row.createCell(5).setCellValue(order.getReceiverMobile());
                     row.createCell(6).setCellValue(order.getReceiver());
                     row.createCell(7).setCellValue(orderId);
+                    i++;
                 }
-            }
+
 
         }
 

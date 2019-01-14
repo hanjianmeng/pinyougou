@@ -183,4 +183,8 @@
       audit_status = #{auditStatus,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findSpecList" resultType="java.util.Map">
+    select id,spec_name as text from tb_specification
+  </select>
 </mapper>

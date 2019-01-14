@@ -14,8 +14,8 @@ app.service('orderService',function($http){
     }
 
     //查询某天总金额
-    this.findTotalMoney=function(time){
-        return $http.get("../orderManager/findTotalMoney.do?time="+time);
+    this.findTotalMoney=function(){
+        return $http.get('../orderManager/findTotalMoney.do');
     }
     // //增加
     // this.add=function(entity){

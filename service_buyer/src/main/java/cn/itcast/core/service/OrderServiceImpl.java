@@ -19,9 +19,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Transactional
@@ -42,21 +44,26 @@ public class OrderServiceImpl implements  OrderService {
     @Autowired
     private IdWorker idWorker;
 
+    private long aLong=0;
+
+    private Map<String,String> orderMap;
+
     @Override
     public void add(Order order) {
+        aLong=System.currentTimeMillis();
         //1. 从订单对象中获取当前登录用户用户名
         String userId = order.getUserId();
         //2. 根据用户名获取购物车集合
         List<BuyerCart> cartList = (List<BuyerCart>)redisTemplate.boundHashOps(Constants.CART_LIST_REDIS).get(userId);
         List<String> orderIdList=new ArrayList();//订单ID列表
         double total_money=0;//总金额 （元）
-
+         toDate();
         //3. 遍历购物车集合
         if (cartList != null) {
             for (BuyerCart cart : cartList) {
                 //TODO 4. 根据购物车对象保存订单数据
                 long orderId = idWorker.nextId();
-                System.out.println("sellerId:"+cart.getSellerId());
+               // System.out.println("sellerId:"+cart.getSellerId());
                 Order tborder=new Order();//新创建订单对象
                 tborder.setOrderId(orderId);//订单ID
                 tborder.setUserId(order.getUserId());//用户名
@@ -71,6 +78,14 @@ public class OrderServiceImpl implements  OrderService {
                 tborder.setSellerId(cart.getSellerId());//商家ID
                 //循环购物车明细
                 double money=0;
+                orderMap=new HashMap<>();
+                Date date = new Date();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String format = simpleDateFormat.format(date);
+
+                orderMap.put("orderId",String.valueOf(orderId));
+                orderMap.put("time",format);
+                orderMap.put("type",order.getPaymentType());
 
                 //5. 从购物车中获取购物项集合
                 List<OrderItem> orderItemList = cart.getOrderItemList();
@@ -113,6 +128,17 @@ public class OrderServiceImpl implements  OrderService {
         //TODO 10. 根据当前登录用户的用户名删除购物车
         redisTemplate.boundHashOps(Constants.CART_LIST_REDIS).delete(order.getUserId());
 
+    }
+    //计算支付超时
+    public long toDate(){
+         //计算超时时间
+        return aLong;
+
+    }
+
+    //获取订单编号,下订单时间
+    public Map<String,String> timeAndOrderId(){
+        return orderMap;
     }
 
     @Override
@@ -184,18 +210,64 @@ public class OrderServiceImpl implements  OrderService {
     }
 
     @Override
-    public String findTotalMoney(Date time) {
-        int b = 0;
-        BigDecimal totalMoney = new BigDecimal(b);
-        OrderQuery query = new OrderQuery();
-        OrderQuery.Criteria criteria = query.createCriteria();
-        criteria.andPaymentTypeLike(time.toString());
-        List<Order> orderList = orderDao.selectByExample(query);
-        if (orderList != null){
-            for (Order order : orderList) {
-                totalMoney = totalMoney.add(order.getPayment());
+    public Map<String ,Object> findTotalMoney() {
+        //建立数组存放日期和总金额
+        List<String> dateList = new ArrayList<>();
+        List<BigDecimal> moneyList = new ArrayList<>();
+        Map<String ,Object> map = new HashMap<>();
+
+        //获取要统计金额的时间
+        //1.定义时间转换格式,用来去掉时分秒
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //2.获取日历对象
+        Calendar calendar = Calendar.getInstance();
+
+        for (int i = -7; i < 0; i++) {
+            Date startDate = new Date();
+            try {
+                startDate = sdf.parse(sdf.format(startDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DAY_OF_MONTH,i);
+            startDate = calendar.getTime();
+            //3.获取一天开始时间
+            String s = sdf.format(startDate).toString();
+            dateList.add(s);
+//            System.out.println(startDate.toString());
+            //4.获取一天的结束时间
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+            Date endDate = calendar.getTime();
+            try {
+                endDate = sdf.parse(sdf.format(endDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+//            System.out.println(endDate);
+
+            //查询一天的总销售额
+            OrderQuery query = new OrderQuery();
+            OrderQuery.Criteria criteria = query.createCriteria();
+            criteria.andCreateTimeBetween(startDate,endDate);
+            List<Order> orderList = orderDao.selectByExample(query);
+
+            //初始化金额统计对象
+            int b = 0;
+            BigDecimal totalMoney = new BigDecimal(b);
+
+            //遍历数组,求总金额
+            if (orderList != null && orderList.size() >0){
+                for (Order order : orderList) {
+                    BigDecimal payment = order.getPayment();
+                    totalMoney = totalMoney.add(payment);
+                }
+            }
+            moneyList.add(totalMoney);
         }
-        return totalMoney.toString();
+        map.put("moneyList",moneyList);
+        map.put("dateList",dateList);
+        return map;
     }
 }

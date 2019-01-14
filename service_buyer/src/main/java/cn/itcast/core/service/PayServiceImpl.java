@@ -25,9 +25,11 @@ public class PayServiceImpl implements PayService {
     //回调地址
     //@Value("${notifyurl}")
     //private String notifyurl;
-
+        private long aLong=0;
     @Override
     public Map createNative(String outTradeNo, String totalFee) {
+
+        aLong=System.currentTimeMillis();
         //1.创建参数
         Map<String,String> param=new HashMap();//创建参数
         param.put("appid", appid);//公众号
@@ -87,5 +89,11 @@ public class PayServiceImpl implements PayService {
             return null;
         }
 
+    }
+
+    @Override
+    public long toDate() {
+        //计算支付超时时间
+        return aLong;
     }
 }

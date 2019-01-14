@@ -98,6 +98,6 @@ public class SpecController {
 
     @RequestMapping("/selectOptionList")
     public List<Map> selectOptionList() {
-        return specService.selectOptionList();
+        return specService.findSpecList();
     }
 }

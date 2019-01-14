@@ -83,7 +83,7 @@ public class ItemCatServiceImpl implements ItemCatService {
         //如果缓存中没有数据，则从数据库查询再存入缓存
         if(itemCatList==null){
             //查询出1级商品分类的集合
-            List<ItemCat> itemCatList1 = catDao.findItemCatListByParentId(0L);
+        List<ItemCat> itemCatList1 = catDao.findItemCatListByParentId(0L);
             //遍历1级商品分类的集合
             for(ItemCat itemCat1:itemCatList1){
                 //查询2级商品分类的集合(将1级商品分类的id作为条件)

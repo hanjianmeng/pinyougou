@@ -127,9 +127,8 @@ public class SpecificationServiceImpl implements SpecificationService {
     }
 
     @Override
-    public List<Map> selectOptionList() {
-      //  return specDao.selectOptionList();
-        return null;
+    public List<Map> findSpecList() {
+        return specDao.findSpecList();
     }
 
 

@@ -31,10 +31,10 @@ app.controller('orderManagerController' ,function($scope,$controller   ,orderSer
     }
 
     // 查询总金额:
-    $scope.findTotalMoney = function(time){
-        orderService.findTotalMoney(time).success(function(response){
+    $scope.findTotalMoney = function(){
+        orderService.findTotalMoney().success(function(response){
             // {id:xx,name:yy,firstChar:zz}
-            $scope.money = response;
+            $scope.entity = response;
         });
     }
 

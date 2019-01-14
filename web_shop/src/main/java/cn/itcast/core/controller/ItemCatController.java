@@ -51,7 +51,7 @@ public class ItemCatController {
             Long typeTemplateId = goodsEntity.getGoods().getTypeTemplateId();
 
             itemCat.setName(name);
-            itemCat.setStatus("0");
+            itemCat.setAuditStatus("0");
             itemCat.setTypeId(typeTemplateId);
 
             catService.add(itemCat);
