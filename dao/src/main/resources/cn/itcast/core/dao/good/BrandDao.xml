@@ -198,4 +198,8 @@
       audit_status = #{auditStatus,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findBrandList" resultType="java.util.Map">
+    select id,name as text from tb_brand
+  </select>
 </mapper>

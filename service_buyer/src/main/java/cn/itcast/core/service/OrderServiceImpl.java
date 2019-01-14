@@ -235,7 +235,7 @@ public class OrderServiceImpl implements  OrderService {
             //3.获取一天开始时间
             String s = sdf.format(startDate).toString();
             dateList.add(s);
-            System.out.println(startDate.toString());
+//            System.out.println(startDate.toString());
             //4.获取一天的结束时间
             calendar.setTime(startDate);
             calendar.add(Calendar.DAY_OF_MONTH,1);
@@ -245,7 +245,7 @@ public class OrderServiceImpl implements  OrderService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            System.out.println(endDate);
+//            System.out.println(endDate);
 
             //查询一天的总销售额
             OrderQuery query = new OrderQuery();

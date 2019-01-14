@@ -19,7 +19,7 @@ public interface SpecificationService {
 
     public void delete(Long[] ids);
 
-    public List<Map> selectOptionList();
+    List<Map> findSpecList();
 
     void uploadExcel(String fileName) throws Exception;
 

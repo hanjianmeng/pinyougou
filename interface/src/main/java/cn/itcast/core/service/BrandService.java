@@ -20,7 +20,7 @@ public interface BrandService {
 
     public void delete(Long[] ids);
 
-    public List<Map> selectOptionList();
+    public List<Map> findBrandList();
 
     void uploadExcel( String fileName) throws Exception;
 

@@ -92,8 +92,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Map> selectOptionList() {
-        return null;
+    public List<Map> findBrandList() {
+        return brandDao.findBrandList();
     }
 
     @Override
