@@ -2,6 +2,7 @@ package cn.itcast.core.controller;
 
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.entity.Result;
+import cn.itcast.core.pojo.entity.UserList;
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.service.UserService;
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -61,6 +63,13 @@ public class UserController {
     public PageResult search(@RequestBody User user, Integer page, Integer rows) {
         PageResult result = userService.findByPage(user, page, rows);
         return result;
+    }
+
+
+    @RequestMapping("/huoyue")
+    public UserList huoyue(){
+        UserList huoyue = userService.huoyue();
+        return huoyue;
     }
 
 

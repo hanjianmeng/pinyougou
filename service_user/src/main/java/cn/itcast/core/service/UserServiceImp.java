@@ -2,6 +2,7 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.entity.PageResult;
+import cn.itcast.core.pojo.entity.UserList;
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -15,15 +16,17 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+
+
+
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.Session;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+
 
 @Service
 public class UserServiceImp implements UserService {
@@ -188,7 +191,37 @@ public class UserServiceImp implements UserService {
     }
 
 
-
+    @Override
+    public UserList huoyue() {
+        UserList userAnalyze = new UserList();
+        // 所有用户集合  86400000
+        List<User> users = userDao.selectByExample(null);
+        // 用于保存活跃用户
+        List<User> userList = new ArrayList<>();
+        // 用于保存非活跃用户
+        List<User> userListNo = new ArrayList<>();
+        long weekTime = 86400000 * 7;
+        for (User user : users) {
+            long lastTime = user.getLastLoginTime().getTime();
+            long nowTime = new Date().getTime();
+            if ( nowTime - lastTime < weekTime){
+                userList.add(user);
+            }else{
+                userListNo.add(user);
+            }
+        }
+        // 活跃用户集合
+        userAnalyze.setUserListhuoyue(userList);
+        // 非活跃用户集合
+        userAnalyze.setUserListNOhuoyue(userListNo);
+        //用户总数
+        userAnalyze.setUserALL((long)users.size());
+        //用户活跃个数
+        userAnalyze.setUserActice((long)userList.size());
+        //用户非活跃个数
+        userAnalyze.setUserNoActice((long)userListNo.size());
+        return userAnalyze;
+    }
 }
 
 

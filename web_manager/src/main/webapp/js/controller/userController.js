@@ -12,6 +12,13 @@ app.controller("userController",function($scope,$controller,$http,userService){
     }
 
 
+    // 查询活跃用户:
+    $scope.huoyue = function(){
+        // 向后台发送请求:
+        userService.huoyue().success(function(response){
+            $scope.list = response;
+        });
+    }
     // 分页查询
     $scope.findByPage = function(page,rows){
         // 向后台发送请求获取数据:
@@ -56,6 +63,13 @@ app.controller("userController",function($scope,$controller,$http,userService){
         });
     }
 
+    $scope.huoyue=function(){
+        userService.huoyue().success(
+            function(response){
+                $scope.userListhuoyue=response.userListhuoyue;
 
+            }
+        );
+    };
 
 });

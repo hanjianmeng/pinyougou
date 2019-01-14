@@ -36,7 +36,20 @@
 
     <!-- 数据表格 -->
     <div class="table-box">
-
+        <!--工具栏-->
+        <div class="pull-left">
+            <div class="form-group form-inline">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" title="用户活跃度分析" data-toggle="modal" data-target="#editModal" ng-click="huoyue()"><i class="fa fa-file-o"></i> 用户活跃度分析 </button>
+                </div>
+            </div>
+        </div>
+        <div class="box-tools pull-right">
+            <div class="has-feedback">
+                用户个数：{{paginationConf.totalItems}} 活跃用户个数：{{userActice}} 非活跃用户个数：{{userNoActice}}
+            </div>
+        </div>
+        <!--工具栏/-->
 
         <!--数据列表-->
         <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
@@ -62,7 +75,7 @@
                 <td>{{User.created}}</td>
                 <td>
 
-                    <span>{{User.status==1?'冻结':'未冻结'}}</span>
+                    <span>{{User.status==1?'未冻结':'冻结'}}</span>
 
                 </td>
                 <td class="text-center">
@@ -133,8 +146,8 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="update(User.id,'1')">冻结</button>
-                <button class="btn btn-danger"  data-dismiss="modal" aria-hidden="true" ng-click="update(User.id,'0')">解冻</button>
+                <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click="update(User.id,'1')">解冻</button>
+                <button class="btn btn-success"  data-dismiss="modal" aria-hidden="true" ng-click="update(User.id,'0')">冻结</button>
                 <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
             </div>
 

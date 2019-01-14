@@ -27,4 +27,9 @@ app.service("userService",function($http){
     this.selectOptionList = function(){
         return $http.get("../user/selectOptionList.do");
     }
+
+    this.huoyue = function(){
+        return $http.get("../user/huoyue.do");
+    }
+
 });
