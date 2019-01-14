@@ -19,9 +19,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Transactional
@@ -184,18 +184,64 @@ public class OrderServiceImpl implements  OrderService {
     }
 
     @Override
-    public String findTotalMoney(Date time) {
-        int b = 0;
-        BigDecimal totalMoney = new BigDecimal(b);
-        OrderQuery query = new OrderQuery();
-        OrderQuery.Criteria criteria = query.createCriteria();
-        criteria.andPaymentTypeLike(time.toString());
-        List<Order> orderList = orderDao.selectByExample(query);
-        if (orderList != null){
-            for (Order order : orderList) {
-                totalMoney = totalMoney.add(order.getPayment());
+    public Map<String ,Object> findTotalMoney() {
+        //建立数组存放日期和总金额
+        List<String> dateList = new ArrayList<>();
+        List<BigDecimal> moneyList = new ArrayList<>();
+        Map<String ,Object> map = new HashMap<>();
+
+        //获取要统计金额的时间
+        //1.定义时间转换格式,用来去掉时分秒
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //2.获取日历对象
+        Calendar calendar = Calendar.getInstance();
+
+        for (int i = -7; i < 0; i++) {
+            Date startDate = new Date();
+            try {
+                startDate = sdf.parse(sdf.format(startDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DAY_OF_MONTH,i);
+            startDate = calendar.getTime();
+            //3.获取一天开始时间
+            String s = sdf.format(startDate).toString();
+            dateList.add(s);
+            System.out.println(startDate.toString());
+            //4.获取一天的结束时间
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+            Date endDate = calendar.getTime();
+            try {
+                endDate = sdf.parse(sdf.format(endDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            System.out.println(endDate);
+
+            //查询一天的总销售额
+            OrderQuery query = new OrderQuery();
+            OrderQuery.Criteria criteria = query.createCriteria();
+            criteria.andCreateTimeBetween(startDate,endDate);
+            List<Order> orderList = orderDao.selectByExample(query);
+
+            //初始化金额统计对象
+            int b = 0;
+            BigDecimal totalMoney = new BigDecimal(b);
+
+            //遍历数组,求总金额
+            if (orderList != null && orderList.size() >0){
+                for (Order order : orderList) {
+                    BigDecimal payment = order.getPayment();
+                    totalMoney = totalMoney.add(payment);
+                }
+            }
+            moneyList.add(totalMoney);
         }
-        return totalMoney.toString();
+        map.put("moneyList",moneyList);
+        map.put("dateList",dateList);
+        return map;
     }
 }
